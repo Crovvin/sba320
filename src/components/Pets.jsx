@@ -7,7 +7,7 @@ function Pets(){
     const [cats, setCats] = useState([]);
     const [breeds, setBreeds] = useState([]);
     const [selection, setSelection] = useState("");
-
+ 
     useEffect(() => {
         const getBreed = async () => {
           try {
@@ -32,55 +32,60 @@ function Pets(){
             console.error(error);
           }
         };
-    
+
         getBreed();
       }, []);
     
-      const getInfo = async () => {
-        if (!selection) return;
+      const getInfo = async (selectionBreed) => {
+        const selectedBreed = breeds.find((b) => b.name === selectionBreed);
+        if (!selectedBreed) return;
         try {
-          const selectedBreed = breeds.find((b) => b.name === selection);
-          
-          if (selectedBreed) {
             const apiUrl = selectedBreed.type === "Dog"
-              ? `https://api.thedogapi.com/v1/images/search?breed_id=${selectedBreed.id}&limit=3`
-              : `https://api.thecatapi.com/v1/images/search?breed_id=${selectedBreed.id}&limit=3`;
-            
+                ? `https://api.thedogapi.com/v1/images/search?breed_ids=${selectedBreed.id}&limit=3`
+                : `https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreed.id}&limit=3`;
+
             const chosenKey = selectedBreed.type === "Dog" ? API_KEY_D : API_KEY_C;
             const imgRes = await fetch(apiUrl, {
-              headers: { "x-api-key": chosenKey },
+                headers: { "x-api-key": chosenKey },
             });
             const imageData = await imgRes.json();
-            
+
             if (selectedBreed.type === "Dog") {
-              setDogs([{ ...selectedBreed, images: imageData.map(img => img.url) }]);
-              setCats([]);
+                setDogs([{ ...selectedBreed, images: imageData.map(img => img.url) }]);
+                setCats([]);
             } else {
-              setCats([{ ...selectedBreed, images: imageData.map(img => img.url) }]);
-              setDogs([]);
+                setCats([{ ...selectedBreed, images: imageData.map(img => img.url) }]);
+                setDogs([]);
             }
-          }
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
       };
+
+      const randomize = () => {
+        const randomBreed = breeds[Math.floor(Math.random() * breeds.length)];
+        getInfo(randomBreed.name);
+        setSelection(randomBreed.name);
+      };
+
     
       return (
         <div>
           <div>
-            <select value={selection} onChange={(e) => setSelection(e.target.value)}>
-              <option value="">Select a Breed</option>
+            <select value = {selection} onChange = {(e) => setSelection(e.target.value)}>
+              <option value = "">Select a Breed</option>
               {breeds.map((breed) => (
-                <option key={breed.id} value={breed.name}>{breed.name} ({breed.type})</option>
+                <option key = {breed.id} value = {breed.name}>{breed.name} ({breed.type})</option>
               ))}
             </select>
-            <button onClick={getInfo}>Search</button>
+            <button onClick = {() => getInfo(selection)}>Search</button>
+            <button onClick = {randomize}>Pick For Me! </button>
           </div>
           <div>
             {dogs.map((dog) => (
-              <div key={dog.id}>
+              <div key = {dog.id}>
                 <h3>{dog.name}</h3>
-                {dog.images && dog.images.map((img, index) => <img key={index} src={img} alt={dog.name} style={{ width: "200px", height: "auto", margin: "5px" }} />)}
+                {dog.images && dog.images.map((img, index) => <img key = {index} src = {img} alt = {dog.name} style = {{ width: "200px", height: "auto", margin: "5px" }}/>)}
                 <p>Breed Group: {dog.breed_group}</p>
                 <p>Temperament: {dog.temperament}</p>
                 <p>Weight: {dog.weight.imperial} lbs</p>
@@ -88,9 +93,9 @@ function Pets(){
               </div>
             ))}
             {cats.map((cat) => (
-              <div key={cat.id}>
+              <div key = {cat.id}>
                 <h3>{cat.name}</h3>
-                {cat.images && cat.images.map((img, index) => <img key={index} src={img} alt={cat.name} style={{ width: "200px", height: "auto", margin: "5px"  }} />)}
+                {cat.images && cat.images.map((img, index) => <img key = {index} src = {img} alt = {cat.name} style = {{ width: "200px", height: "auto", margin: "5px" }}/>)}
                 <p>Temperament: {cat.temperament}</p>
                 <p>Weight: {cat.weight.imperial} lbs</p>
                 <p>Life Span: {cat.life_span}</p>
