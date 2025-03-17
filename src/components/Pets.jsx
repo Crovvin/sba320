@@ -85,7 +85,7 @@ function Pets(){
             {dogs.map((dog) => (
               <div key = {dog.id}>
                 <h3>{dog.name}</h3>
-                {dog.images && dog.images.map((img, index) => <img key = {index} src = {img} alt = {dog.name} style = {{ width: "200px", height: "auto", margin: "5px" }}/>)}
+                {dog.images && dog.images.map((img, index) => <img key = {index} src = {img} alt = {dog.name}/>)}
                 <p>Breed Group: {dog.breed_group}</p>
                 <p>Temperament: {dog.temperament}</p>
                 <p>Weight: {dog.weight.imperial} lbs</p>
@@ -95,7 +95,7 @@ function Pets(){
             {cats.map((cat) => (
               <div key = {cat.id}>
                 <h3>{cat.name}</h3>
-                {cat.images && cat.images.map((img, index) => <img key = {index} src = {img} alt = {cat.name} style = {{ width: "200px", height: "auto", margin: "5px" }}/>)}
+                {cat.images && cat.images.map((img, index) => <img key = {index} src = {img} alt = {cat.name}/>)}
                 <p>Temperament: {cat.temperament}</p>
                 <p>Weight: {cat.weight.imperial} lbs</p>
                 <p>Life Span: {cat.life_span}</p>

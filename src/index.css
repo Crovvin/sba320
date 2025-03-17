@@ -17,3 +17,9 @@ button{
   border-radius: 5px;
   margin: 5px;
 }
+
+img{
+  width: auto;
+  height: 200px;
+  margin: 3px;
+}
